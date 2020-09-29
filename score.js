@@ -6,7 +6,17 @@ function onScoreUpdate(dropPosition, bounciness, size, bucketLabel) {
 }
 
 function runAnalysis() {
- const bucket =  console.log('Your point will probably fall int', bucket)
+ const testSetSize = 10;
+ const [testSet, trainingSet] = splitDataset(outputs, testSetSize);
+ let numberCorrect = 0;
+
+ for (let index = 0; index < testSet.length; index++) {
+   const bucket = knn(trainingSet, testSet[index][0]);
+   if(bucket === testSet[index][3]){
+     numberCorrect++; 
+   }
+ }
+console.log('Your prediction was right :', numberCorrect / testSetSize * 100 , '% of the time');
 }
 
 function knn(data, point){
