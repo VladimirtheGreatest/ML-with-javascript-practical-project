@@ -1,25 +1,24 @@
 const outputs = [];
-const k = 3;
 
 function onScoreUpdate(dropPosition, bounciness, size, bucketLabel) {
   outputs.push([dropPosition, bounciness, size, bucketLabel]);
 }
 
 function runAnalysis() {
- const testSetSize = 10;
+ const testSetSize = 100;
  const [testSet, trainingSet] = splitDataset(outputs, testSetSize);
- let numberCorrect = 0;
 
- for (let index = 0; index < testSet.length; index++) {
-   const bucket = knn(trainingSet, testSet[index][0]);
-   if(bucket === testSet[index][3]){
-     numberCorrect++; 
-   }
- }
-console.log('Your prediction was right :', numberCorrect / testSetSize * 100 , '% of the time');
+ _.range(1,20).forEach(kElement => {
+ const accuracy = _.chain(testSet)
+  .filter(testPoint => knn(trainingSet, testPoint[0], kElement) === testPoint[3])
+   .size()
+    .divide(testSetSize)
+    .value()
+    console.log('For k of', kElement,'Your prediction was right :', accuracy * 100 , '% of the time');
+  });
 }
 
-function knn(data, point){
+function knn(data, point, k){
   return _.chain(data)
   .map(row => [distance(row[0], point), row[3]])
   .sortBy(row => row[0])
