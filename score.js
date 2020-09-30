@@ -21,7 +21,13 @@ function runAnalysis() {
 //k nearest neighbour algorithm
 function knn(data, point, k){
   return _.chain(data)
-  .map(row => [distance(row[0], point), row[3]])
+  .map(row => {
+    //initial == Gets all but the last element of array.
+    return [ 
+      distance(_.initial(row), point),
+       _.last(row) //bucket which it falls into last element of the array
+    ];
+  })
   .sortBy(row => row[0])
   .slice(0, k)
   .countBy(row => row[1])
