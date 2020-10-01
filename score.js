@@ -6,15 +6,17 @@ function onScoreUpdate(dropPosition, bounciness, size, bucketLabel) {
 
 function runAnalysis() {
  const testSetSize = 100;
- const [testSet, trainingSet] = splitDataset(minMax(outputs, 3), testSetSize);
+ const k = 10;
 
- _.range(1,20).forEach(kElement => { //making prediction for more k elements
- const accuracy = _.chain(testSet)
-  .filter(testPoint => knn(trainingSet, _.initial(testPoint), kElement) === testPoint[3])//comparing values, filter out those that meet the prediction
+ _.range(0,3).forEach(feature => { //dropPosition, bounciness, size, for each feature in our data structure
+   const data = _.map(outputs, row => [row[feature], _.last(row)]); //dropPosition, bucket || bounciness, bucket || size, bucket
+   const [testSet, trainingSet] = splitDataset(minMax(data, 1), testSetSize);
+   const accuracy = _.chain(testSet)
+  .filter(testPoint => knn(trainingSet, _.initial(testPoint), k) === _.last(testPoint))//comparing values, filter out those that meet the prediction
    .size()
     .divide(testSetSize)
     .value()
-    console.log('For k of', kElement,'Your prediction was right :', accuracy * 100 , '% of the time');
+    console.log('For feature of', feature ,'Your prediction was right :', accuracy * 100 , '% of the time');
   });
 }
 
@@ -62,9 +64,8 @@ function splitDataset(data, testCount){
   //we will use testing set and training set to test accuracy of our algorhitm
                           //array/start position / end position
   const testSet = _.slice(shuffled, 0, testCount);
-  console.log('test set',testSet);
   const trainingSet = _.slice(shuffled, testCount);
-  console.log('training set', trainingSet);
+
 
   return[testSet, trainingSet]
 }
