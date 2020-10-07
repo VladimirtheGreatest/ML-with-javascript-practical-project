@@ -27,6 +27,7 @@ function knn(data, point, k){
   return _.chain(data)
   .map(row => {
     //initial == Gets all but the last element of array.
+    console.log(distance(_.initial(row), point));
     return [ 
       distance(_.initial(row), point),
        _.last(row) //bucket which it falls into last element of the array
@@ -43,7 +44,7 @@ function knn(data, point, k){
   .value();
 }
 
-function distance(pointA, pointB){
+var distance = (pointA, pointB) => {
   //using 3d pythagorean theorem to calculate distance between points x² + y² + z² = s²!
   // pointA = [300, .5, 16](prediction point???????) pointB = [350, .55, 16]
   //console.log('pointA', pointA);
